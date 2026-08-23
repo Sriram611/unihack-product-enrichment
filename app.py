@@ -27,150 +27,252 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# --- Custom Modern CSS Injection (Vercel / Linear Aesthetic) ---
+# --- Custom CSS Injection (Technical Spec-Sheet Aesthetic) ---
 st.markdown("""
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
-    
-    html, body, [class*="css"] {
-        font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-    }
-    
-    /* Background adjustments */
-    .stApp {
-        background: radial-gradient(circle at 10% 20%, rgba(17, 24, 39, 0.95) 0%, rgba(10, 15, 29, 1) 90.2%);
-        color: #F8FAFC;
+    @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap');
+
+    :root {
+        --graphite: #14161A;
+        --surface: #1B1E23;
+        --hairline: #33383F;
+        --ink: #ECEFF2;
+        --ink-dim: #9BA3AD;
+        --amber: #E8A33D;
+        --amber-ink: #1A1200;
+        --teal: #4FA8A0;
+        --rust: #C1622D;
     }
 
-    /* Main Container Padding */
+    html, body, [class*="css"] {
+        font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    /* Flat graphite background with a faint drafting grid, not a radial glow */
+    .stApp {
+        background-color: var(--graphite);
+        background-image:
+            linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+        background-size: 28px 28px;
+        color: var(--ink);
+    }
+
     .block-container {
         padding-top: 2rem;
         padding-bottom: 3rem;
         max-width: 95rem;
     }
 
-    /* Modern Glassmorphic Cards */
+    h1, h2, h3, .pill-badge, .metric-title, .stTabs [data-baseweb="tab"] {
+        font-family: 'IBM Plex Mono', monospace;
+    }
+
+    section[data-testid="stSidebar"] {
+        background-color: var(--surface);
+        border-right: 1px solid var(--hairline);
+    }
+    section[data-testid="stSidebar"] h3 {
+        font-size: 0.78rem;
+        letter-spacing: 0.06em;
+        color: var(--ink-dim);
+    }
+
+    /* Spec-plate cards: hairline border + corner crop-marks, no blur/glow */
     .metric-card {
-        background: rgba(30, 41, 59, 0.55);
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        border-radius: 14px;
+        position: relative;
+        background: var(--surface);
+        border: 1px solid var(--hairline);
+        border-radius: 4px;
         padding: 1.25rem 1.5rem;
-        backdrop-filter: blur(16px);
-        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3), 0 8px 10px -6px rgba(0, 0, 0, 0.3);
-        transition: transform 0.2s ease, border-color 0.2s ease;
+        transition: border-color 0.15s ease;
+    }
+    .metric-card::before, .metric-card::after {
+        content: "";
+        position: absolute;
+        width: 7px; height: 7px;
+        border-top: 2px solid var(--amber);
+        border-left: 2px solid var(--amber);
+        top: -1px; left: -1px;
+    }
+    .metric-card::after {
+        left: auto; top: auto;
+        right: -1px; bottom: -1px;
+        border-top: none; border-left: none;
+        border-bottom: 2px solid var(--amber);
+        border-right: 2px solid var(--amber);
     }
     .metric-card:hover {
-        transform: translateY(-2px);
-        border-color: rgba(99, 102, 241, 0.5);
+        border-color: rgba(232, 163, 61, 0.4);
     }
     .metric-title {
-        font-size: 0.8rem;
-        font-weight: 600;
+        font-size: 0.72rem;
+        font-weight: 500;
         text-transform: uppercase;
-        letter-spacing: 0.06em;
-        color: #94A3B8;
-        margin-bottom: 0.4rem;
+        letter-spacing: 0.08em;
+        color: var(--ink-dim);
+        margin-bottom: 0.5rem;
     }
     .metric-value {
-        font-size: 1.75rem;
-        font-weight: 800;
-        color: #FFFFFF;
+        font-family: 'IBM Plex Mono', monospace;
+        font-size: 1.65rem;
+        font-weight: 600;
+        color: var(--ink);
         display: flex;
         align-items: baseline;
-        gap: 0.4rem;
+        gap: 0.5rem;
     }
     .metric-badge {
-        font-size: 0.75rem;
-        padding: 0.2rem 0.5rem;
-        border-radius: 9999px;
+        font-family: 'IBM Plex Sans', sans-serif;
+        font-size: 0.72rem;
+        padding: 0.15rem 0.5rem;
+        border-radius: 3px;
         font-weight: 600;
+        border: 1px solid currentColor;
     }
-    .badge-green { background: rgba(16, 185, 129, 0.18); color: #34D399; }
-    .badge-blue { background: rgba(59, 130, 246, 0.18); color: #60A5FA; }
-    .badge-purple { background: rgba(168, 85, 247, 0.18); color: #C084FC; }
-    .badge-amber { background: rgba(245, 158, 11, 0.18); color: #FBBF24; }
+    .badge-green { background: rgba(79, 168, 160, 0.12); color: var(--teal); }
+    .badge-blue  { background: rgba(79, 168, 160, 0.12); color: var(--teal); }
+    .badge-purple { background: rgba(236, 239, 242, 0.08); color: var(--ink-dim); }
+    .badge-amber { background: rgba(232, 163, 61, 0.14); color: var(--amber); }
 
-    /* Action Buttons */
-    .stButton>button {
-        background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%);
-        color: white;
+    /* Flat amber action button, dark ink text — no gradient/glow */
+    .stButton>button, .stDownloadButton>button {
+        background: var(--amber);
+        color: var(--amber-ink);
         border: none;
-        padding: 0.75rem 2rem;
-        font-weight: 700;
-        border-radius: 10px;
-        box-shadow: 0 4px 20px rgba(99, 102, 241, 0.35);
-        transition: all 0.2s ease-in-out;
+        padding: 0.7rem 2rem;
+        font-family: 'IBM Plex Mono', monospace;
+        font-weight: 600;
+        letter-spacing: 0.02em;
+        border-radius: 4px;
+        transition: background 0.15s ease;
         width: 100%;
     }
-    .stButton>button:hover {
-        background: linear-gradient(135deg, #4338CA 0%, #6D28D9 100%);
-        box-shadow: 0 6px 25px rgba(99, 102, 241, 0.55);
-        transform: translateY(-1px);
-        color: white;
+    .stButton>button:hover, .stDownloadButton>button:hover {
+        background: #F2B45A;
+        color: var(--amber-ink);
     }
 
-    /* Subheader & Section Pills */
+    /* Section eyebrow, styled like a stamped spec tag */
     .pill-badge {
         display: inline-flex;
         align-items: center;
-        gap: 0.4rem;
-        background: rgba(99, 102, 241, 0.15);
-        border: 1px solid rgba(99, 102, 241, 0.3);
-        color: #A5B4FC;
+        gap: 0.5rem;
+        background: transparent;
+        border: 1px solid var(--amber);
+        color: var(--amber);
         padding: 0.25rem 0.75rem;
-        border-radius: 9999px;
-        font-size: 0.8rem;
+        border-radius: 3px;
+        font-size: 0.75rem;
         font-weight: 600;
+        letter-spacing: 0.04em;
         margin-bottom: 0.75rem;
     }
 
-    /* Tab styling */
+    /* Tabs as a spec-sheet index, not pill nav */
     .stTabs [data-baseweb="tab-list"] {
-        gap: 1.5rem;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        gap: 1.75rem;
+        border-bottom: 1px solid var(--hairline);
     }
     .stTabs [data-baseweb="tab"] {
-        padding: 0.75rem 0.5rem;
-        font-weight: 600;
-        color: #94A3B8;
+        padding: 0.75rem 0.25rem;
+        font-weight: 500;
+        font-size: 0.85rem;
+        color: var(--ink-dim);
     }
     .stTabs [aria-selected="true"] {
-        color: #818CF8 !important;
-        border-bottom-color: #818CF8 !important;
+        color: var(--amber) !important;
+        border-bottom-color: var(--amber) !important;
     }
+
+    /* Alerts: flat, hairline-bordered, accent-coded left edge instead of colored fill */
+    div[data-testid="stAlert"] {
+        background: var(--surface);
+        border: 1px solid var(--hairline);
+        border-radius: 4px;
+    }
+    div[data-testid="stNotificationContentSuccess"] { border-left: 3px solid var(--teal); padding-left: 0.75rem; }
+    div[data-testid="stNotificationContentInfo"] { border-left: 3px solid var(--amber); padding-left: 0.75rem; }
+    div[data-testid="stNotificationContentError"] { border-left: 3px solid var(--rust); padding-left: 0.75rem; }
+
+    /* Inputs: hairline borders, amber focus ring instead of default blue */
+    .stTextInput input, .stSelectbox [data-baseweb="select"] > div, .stFileUploader section {
+        background: var(--surface) !important;
+        border: 1px solid var(--hairline) !important;
+        border-radius: 4px !important;
+        color: var(--ink) !important;
+    }
+    .stTextInput input:focus {
+        border-color: var(--amber) !important;
+        box-shadow: 0 0 0 1px var(--amber) !important;
+    }
+    .stSlider [data-baseweb="slider"] div[role="slider"] {
+        background-color: var(--amber) !important;
+        border-color: var(--amber) !important;
+    }
+    .stCheckbox [data-baseweb="checkbox"] span {
+        border-color: var(--hairline) !important;
+    }
+
+    /* Native st.metric widgets (attribute slots) */
+    div[data-testid="stMetric"] {
+        background: var(--surface);
+        border: 1px solid var(--hairline);
+        border-radius: 4px;
+        padding: 0.6rem 0.75rem;
+    }
+    div[data-testid="stMetricLabel"] { color: var(--ink-dim); font-size: 0.7rem; }
+    div[data-testid="stMetricValue"] { font-family: 'IBM Plex Mono', monospace; color: var(--ink); }
+
+    /* Dataframe / table container */
+    div[data-testid="stDataFrame"] {
+        border: 1px solid var(--hairline);
+        border-radius: 4px;
+    }
+
+    code, .stCode {
+        font-family: 'IBM Plex Mono', monospace !important;
+    }
+
+    hr { border-color: var(--hairline); }
 </style>
 """, unsafe_allow_html=True)
 
 # --- Sidebar Configuration ---
 with st.sidebar:
-    st.image("https://img.icons8.com/isometric/512/processor.png", width=64)
+    st.markdown(
+        '<div class="pill-badge" style="font-size:0.9rem;">◈ UNICAT-09</div>',
+        unsafe_allow_html=True
+    )
     st.title("UniCat Pipeline")
-    st.caption("AI-Powered Product Intelligence for Industrial Commerce")
+    st.caption("Product Intelligence for Industrial Commerce")
     st.markdown("---")
 
-    st.markdown("### ⚙️ Engine Parameters")
+    st.markdown("### ENGINE PARAMETERS")
     concurrency = st.slider("Scraper Thread Pool", min_value=5, max_value=30, value=15)
     enforce_limits = st.checkbox("Strict Casing & Character Limits", value=True)
     auto_uom_math = st.checkbox("Fractional UOM Standardization", value=True)
 
     st.markdown("---")
-    st.markdown("### 📋 System Architecture")
+    st.markdown("### PIPELINE STAGES")
     st.markdown("""
-    * **Step 1:** Ingest & Deduplication
-    * **Step 2:** Placeholder Cleansing
-    * **Step 3:** Canonical Brand Resolution
-    * **Step 4:** Multi-threaded Sourcing
-    * **Step 5:** Taxonomy Classification
-    * **Step 6:** Attribute Extraction
-    * **Step 7:** UOM & Fraction Norm
-    * **Step 8:** 5-Tier Description Engine
-    * **Step 9:** 252-Column Static Export
-    """)
+    <div style="font-family:'IBM Plex Mono',monospace; font-size:0.8rem; line-height:1.9; color:var(--ink-dim);">
+    01 · Ingest &amp; Deduplication<br>
+    02 · Placeholder Cleansing<br>
+    03 · Canonical Brand Resolution<br>
+    04 · Multi-threaded Sourcing<br>
+    05 · Taxonomy Classification<br>
+    06 · Attribute Extraction<br>
+    07 · UOM &amp; Fraction Norm<br>
+    08 · 5-Tier Description Engine<br>
+    09 · 252-Column Static Export
+    </div>
+    """, unsafe_allow_html=True)
     st.markdown("---")
-    st.caption("UniHack 2026 Submission Build • Evaluator Certified")
+    st.caption("UniHack 2026 Submission Build · Evaluator Certified")
 
 # --- Hero Header Section ---
-st.markdown('<div class="pill-badge">⚡ Enterprise Data Enrichment Engine v2.5</div>', unsafe_allow_html=True)
+st.markdown('<div class="pill-badge">◈ DATA ENRICHMENT ENGINE · v2.5</div>', unsafe_allow_html=True)
 st.title("Industrial Product Intelligence & Commerce Pipeline")
 st.markdown("Transform messy distributor feeds into complete, publication-ready catalog data mapped across **252 standardized columns** [1].")
 
@@ -185,7 +287,7 @@ with col_upload:
 
 with col_demo:
     st.markdown("<div style='height: 1.8rem;'></div>", unsafe_allow_html=True)
-    use_sample = st.button("📂 Load Official 1,000 SKU Dataset")
+    use_sample = st.button("Load 1,000-SKU Sample")
 
 input_df = None
 
@@ -217,7 +319,7 @@ if input_df is not None:
     
     col_btn, col_info = st.columns([1, 3])
     with col_btn:
-        run_pipeline = st.button("🚀 Run 9-Stage Enrichment")
+        run_pipeline = st.button("Run 9-Stage Enrichment")
     with col_info:
         st.info(f"Dataset ready for processing: **{len(input_df)} total SKUs** across input columns: `[{', '.join(input_df.columns[:4])}...]`")
 
@@ -278,7 +380,7 @@ if input_df is not None:
 
         elapsed = round(time.time() - start_time, 2)
         progress_bar.progress(100)
-        status_box.success(f"✨ Enrichment complete in **{elapsed}s** for **{len(final_df)} SKUs**!")
+        status_box.success(f"Enrichment complete in **{elapsed}s** for **{len(final_df)} SKUs**.")
 
         st.session_state['enriched_df'] = final_df
         st.session_state['elapsed_time'] = elapsed
@@ -293,7 +395,7 @@ if 'enriched_df' in st.session_state:
     n_attrs = (df_out['ATTRIBUTE_LABEL 1'] != '').sum()
 
     st.markdown("<div style='height: 1.5rem;'></div>", unsafe_allow_html=True)
-    st.markdown("### 📊 Real-Time Quality & Compliance Scorecard")
+    st.markdown("### QUALITY & COMPLIANCE SCORECARD")
 
     # Bento Grid Metric Cards
     kpi1, kpi2, kpi3, kpi4 = st.columns(4)
@@ -334,16 +436,16 @@ if 'enriched_df' in st.session_state:
 
     # --- Interactive Tabbed Explorer ---
     tab_table, tab_diff, tab_audit, tab_export = st.tabs([
-        "📋 Master Catalog Explorer", 
-        "🔍 Single-SKU Deep Inspector", 
-        "🛡️ Compliance & Rules Audit", 
-        "📥 Enterprise Export Hub"
+        "01 · Catalog Explorer",
+        "02 · SKU Inspector",
+        "03 · Compliance Audit",
+        "04 · Export Hub"
     ])
 
     # Tab 1: Master Table
     with tab_table:
         st.markdown("##### Filtered 252-Column Output View")
-        search_kw = st.text_input("🔍 Search SKUs by Part Number, Brand, or Keyword:", "")
+        search_kw = st.text_input("Search SKUs by Part Number, Brand, or Keyword", "")
         
         display_cols = [
             'Mfg_Part_Num', 'MANUFACTURER_NAME', 'BRAND_NAME', 'Classpath', 
@@ -370,24 +472,24 @@ if 'enriched_df' in st.session_state:
 
         col_l, col_r = st.columns(2)
         with col_l:
-            st.markdown("#### 📥 Raw Input String")
+            st.markdown("#### Raw Input String")
             st.code(f"MPN: {item.get('Mfg_Part_Num', '')}\nDesc: {item.get('Part_Desc', '')}\nManuf Feed: {item.get('Part_Manuf', '')}", language="yaml")
 
-            st.markdown("#### 🏷️ Entity Resolution & Taxonomy")
+            st.markdown("#### Entity Resolution & Taxonomy")
             st.markdown(f"**Resolved Manufacturer:** `{item.get('MANUFACTURER_NAME', '')}`")
             st.markdown(f"**Canonical Brand:** `{item.get('BRAND_NAME', '')}`")
             st.markdown(f"**Classpath:** `{item.get('Classpath', '')}`")
             st.markdown(f"**Official Source:** [{item.get('MFR URL', '')}]({item.get('MFR URL', '')})")
 
         with col_r:
-            st.markdown("#### 📝 Generated Description Tiers")
+            st.markdown("#### Generated Description Tiers")
             st.markdown(f"**Invoice (Till Receipt - Max 40):** `{item.get('INVOICE_DESC', '')}`")
             st.markdown(f"**Mobile (App View - 60-80 chars):** `{item.get('MOBILE_DESC', '')}`")
             st.markdown(f"**Short Description:** {item.get('SHORT_DESC', '')}")
             st.markdown(f"**Long Description:** {item.get('LONG_DESC1', '')}")
 
         st.markdown("---")
-        st.markdown("#### ⚙️ Extracted Technical Attributes (Slots 1–6)")
+        st.markdown("#### Extracted Technical Attributes (Slots 1–6)")
         attr_cols = st.columns(6)
         for i in range(1, 7):
             label = item.get(f'ATTRIBUTE_LABEL {i}', '')
@@ -405,13 +507,13 @@ if 'enriched_df' in st.session_state:
         
         a1, a2 = st.columns(2)
         with a1:
-            st.markdown("###### 📏 Invoice Description Length Distribution")
+            st.markdown("###### Invoice Description Length Distribution")
             inv_lens = df_out['INVOICE_DESC'].str.len()
             st.bar_chart(inv_lens.value_counts().sort_index())
-            st.caption("✅ 100% of rows are within the strict 40-character maximum.")
+            st.caption("100% of rows are within the strict 40-character maximum.")
 
         with a2:
-            st.markdown("###### 🌐 Sourcing Whitelist Verification")
+            st.markdown("###### Sourcing Whitelist Verification")
             domains = df_out['MFR URL'].apply(lambda u: u.split('/')[2] if 'http' in str(u) else 'Unresolved')
             st.dataframe(domains.value_counts().reset_index().rename(columns={'index': 'Domain', 'count': 'SKU Count'}), use_container_width=True)
 
@@ -423,4 +525,28 @@ if 'enriched_df' in st.session_state:
         exp_c1, exp_c2 = st.columns(2)
         
         # CSV Export
-        csv
+        csv_buffer = io.StringIO()
+        df_out.to_csv(csv_buffer, index=False, encoding='utf-8')
+        csv_bytes = csv_buffer.getvalue().encode('utf-8')
+        
+        with exp_c1:
+            st.download_button(
+                label="Download CSV (252 Columns)",
+                data=csv_bytes,
+                file_name="Unilog_Enriched_Delivery_Output.csv",
+                mime="text/csv"
+            )
+
+        # Excel Export
+        excel_buffer = io.BytesIO()
+        with pd.ExcelWriter(excel_buffer, engine='openpyxl') as writer:
+            df_out.to_excel(writer, index=False, sheet_name='Delivery Format')
+        excel_bytes = excel_buffer.getvalue()
+
+        with exp_c2:
+            st.download_button(
+                label="Download Excel Workbook (.xlsx)",
+                data=excel_bytes,
+                file_name="Unilog_Enriched_Delivery_Output.xlsx",
+                mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+            )
